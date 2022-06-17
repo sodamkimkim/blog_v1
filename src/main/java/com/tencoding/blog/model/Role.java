@@ -26,7 +26,7 @@ public class Role {
 	@EmbeddedId
 	private RoleId roleId;
 	
-	@MapsId("title") // RoleId.title과 movie의 녀석을 맵핑함.
+	@MapsId("title") // RoleId.title과 Movie의 녀석을 맵핑함.
 	@ManyToOne
 	@JoinColumn(name = "title")
 	private Movie movie;

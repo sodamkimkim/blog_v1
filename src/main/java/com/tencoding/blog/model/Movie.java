@@ -17,7 +17,6 @@ public class Movie {
 	@Column(columnDefinition = "DATE")
 	private String releaseDate;
 	
-	
 	private float starScore;
 	
 }

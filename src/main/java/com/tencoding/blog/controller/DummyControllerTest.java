@@ -21,7 +21,7 @@ import com.tencoding.blog.model.RoleType;
 import com.tencoding.blog.model.User;
 import com.tencoding.blog.repository.UserRepository;
 
-@RestController()
+@RestController
 public class DummyControllerTest {
 	// UserRepository 는 메모리에 올라가 있는 상태이다.
 	// 그럼 어떻게 가져 오나요?--> 스프링에서는 DI하면 됨(의존성 주입)
