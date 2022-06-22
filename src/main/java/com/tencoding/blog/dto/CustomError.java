@@ -1,4 +1,4 @@
-package com.tencoding.blog.model;
+package com.tencoding.blog.dto;
 
 public class CustomError {
 private String field;

@@ -3,7 +3,7 @@
 
 
 	<div class="jumbotron text-center">
-		<p>Create by TenCoding</p>
+		<p>Create by Sodam</p>
 		<p>📞010-1111-1111</p>
 		<p>🚩부산시 해운대구 중동</p>
 	</div>
