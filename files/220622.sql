@@ -29,3 +29,4 @@ desc reply;
 create database blog3;
 use blog3;
 desc board;
+select * from board;
