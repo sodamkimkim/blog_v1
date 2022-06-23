@@ -32,3 +32,4 @@ desc board;
 select * from board;
 
 delete from board where id=100;
+select "test1";

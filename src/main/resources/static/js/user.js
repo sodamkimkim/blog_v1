@@ -53,9 +53,11 @@ let index = {
 			dataType: "json"
 			
 		}).done(function(data, textStatus, xhr) {
+			
 			alert("로그인이 완료 되었습니다.")
 			location.href = "/blog"
 			console.log(data);
+			console.log("xhr"+xhr);
 		}).fail(function(error) {
 			alert("로그인에 실패했습니다.")
 			console.log(error);

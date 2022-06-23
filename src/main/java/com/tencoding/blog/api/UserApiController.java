@@ -44,10 +44,15 @@ public class UserApiController {
 		User principal = userService.login(user);
 		// 접근 주체가 정상적으로 username, password 확인! (세션이라는 거대한 메모리에 저장)
 		if (principal != null) {
-			session.setAttribute("principal", principal); // "키", 밸류
+			session.setAttribute("principal", principal); // 세션에 값 저장할 때 "키", 밸류 형식으로 저장한다.
 			System.out.println("세션 정보가 저장되었습니다.");
+			return new ResponseDto<Integer>(HttpStatus.OK.value(), 1);
+		}
+		
+		else {
+			return null;
 		}
 
-		return new ResponseDto<Integer>(HttpStatus.OK.value(), 1);
+
 	}
 }

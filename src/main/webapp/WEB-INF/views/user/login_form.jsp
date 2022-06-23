@@ -1,4 +1,5 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%> <%@ include file="../layout/header.jsp"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%> 
+<%@ include file="../layout/header.jsp"%>
 
 <div class="container">
 	<form action="#">
@@ -17,7 +18,8 @@
 
 	</form>
 	<!-- 자바스크립트 이벤트 바인딩으로 처리할 거라서 form밖으로 뺌 -->
-		  <button type="button" id="btn-login" class="btn btn-primary">로그인</button>
+	<button type="button" id="btn-login" class="btn btn-primary">로그인</button>
+	
 </div>
 <br/>
 <script src="/blog/js/user.js"></script>
