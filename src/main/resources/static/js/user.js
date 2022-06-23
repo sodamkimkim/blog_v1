@@ -21,12 +21,21 @@ let index = {
 			console.log(data);
 			// ajax 호출
 			$.ajax({
-				// 서버측에 회원가입 요청
+			// 입력받은 정보를 가지고 서버측에 회원가입 요청
 				type: "POST",
 				url: "/blog/api/user",
-				data: JSON.stringify(data),// 자동으로 함수가 JSON형식으로 바뀜.
+				// #stringify : string 객체를 json으로, json객체를 string으로 자동 변환.
+				// 여기서 data는 전송할 때 사용되는 거임
+				data: JSON.stringify(data),
+				// #contentType은 보내는 데이터의 타입
+				// ㄴ 디폴트는 application/x-www-form-urlencoded; charset=urf-8
 				contentType: "application/json; charset=utf-8",
-				dataType: "json" // 응답이 왔을 때, 기본 데이터 타입(Buffered 문자열) => js object 자동 변환
+				// #dataType은 서버에서 어떤 타입의 데이터를 받을 것인가.
+				// ㄴ json, html, text 등.
+				// ㄴ js가 이것을 이용해 success나 done함수의 파라미터로 받아 처리한다.
+				// 여기서,, 서버로 부터 응답이 왔을 때, 기본 데이터타입은 문자열(bufferedReader로 통신했으니)인데
+				// message-converter로 json으로 변환한거임.
+				dataType: "json" 
 				
 			}).done(function(data, textStatus, xhr){
 				// 통신 성공시 이 쪽 코드 수행
@@ -52,8 +61,7 @@ let index = {
 			contentType: "application/json; charset=utf-8",
 			dataType: "json"
 			
-		}).done(function(data, textStatus, xhr) {
-			
+		}).done(function(data, textStatus, xhr) {		
 			alert("로그인이 완료 되었습니다.")
 			location.href = "/blog"
 			console.log(data);
