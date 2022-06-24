@@ -21,6 +21,6 @@
 	</div>
 	<br/>
 <!-- /blog하면 자동으로 static에 먼저 간다 -->
-<script src="/blog/js/user.js"></script>
+<script src="/js/user.js"></script>
 <%@ include file="../layout/footer.jsp"%>
 

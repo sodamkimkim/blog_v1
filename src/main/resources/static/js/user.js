@@ -23,7 +23,7 @@ let index = {
 			$.ajax({
 			// 입력받은 정보를 가지고 서버측에 회원가입 요청
 				type: "POST",
-				url: "/blog/api/user",
+				url: "/api/user",
 				// #stringify : string 객체를 json으로, json객체를 string으로 자동 변환.
 				// 여기서 data는 전송할 때 사용되는 거임
 				data: JSON.stringify(data),
@@ -40,7 +40,7 @@ let index = {
 			}).done(function(data, textStatus, xhr){
 				// 통신 성공시 이 쪽 코드 수행
 				alert("회원가입이 완료 되었습니다."); // 10초, 1초 다양하게 걸릴 수 있다.
-				location.href="/blog"; // 화면이동
+				location.href="/"; // 화면이동
 			}).fail(function(error){
 				// 통신 실패시 이 쪽 코드 수행
 				console.log(error);
@@ -56,14 +56,14 @@ let index = {
 		$.ajax({
 			// 회원 로그인 요청
 			type: "POST",
-			url: "/blog/api/user/login",
+			url: "/api/user/login",
 			data: JSON.stringify(data),
 			contentType: "application/json; charset=utf-8",
 			dataType: "json"
 			
 		}).done(function(data, textStatus, xhr) {		
 			alert("로그인이 완료 되었습니다.")
-			location.href = "/blog"
+			location.href = "/"
 			console.log(data);
 			console.log("xhr"+xhr);
 		}).fail(function(error) {
