@@ -9,10 +9,10 @@ import com.tencoding.blog.model.User;
 //DAO 역할을 하는 Repository.
 public interface UserRepository extends JpaRepository<User, Integer> {
 
-	// spring JPA네이밍 전략
-	//prepare statement
-	// SELECT * FROM user WHERE username = ?1 AND password = ?2;
-	User findByUsernameAndPassword(String username, String password); // 위의 쿼리 자동으로 만들어줌.
+//	// spring JPA네이밍 전략
+//	//prepare statement
+//	// SELECT * FROM user WHERE username = ?1 AND password = ?2;
+//	User findByUsernameAndPassword(String username, String password); // 위의 쿼리 자동으로 만들어줌.
 	
 	// 두번째 방법 - native query사용
 //	@Query(value = "SELECT * FROM user WHERE username = ?1 AND password = ?2;")

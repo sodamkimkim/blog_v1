@@ -1,6 +1,10 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<!-- tag라이브러리를 쓸 수 있다. -->
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
 <%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
+﻿<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+<sec:authorize access="isAuthenticated()">
+    <sec:authentication property="principal" var="principal"/>
+</sec:authorize>
 <!DOCTYPE html>
 <html>
   <head>
@@ -35,12 +39,12 @@
       <div class="collapse navbar-collapse" id="collapsibleNavbar">
         <ul class="navbar-nav">
           <c:choose>
-            <c:when test="${empty sessionScope.principal}">
+            <c:when test="${empty principal}">
               <li class="nav-item">
-                <a class="nav-link" href="/login_form">로그인</a>
+                <a class="nav-link" href="/auth/login_form">로그인</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="/join_form">회원가입</a>
+                <a class="nav-link" href="/auth/join_form">회원가입</a>
               </li>
             </c:when>
             <c:otherwise>

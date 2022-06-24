@@ -23,7 +23,7 @@ let index = {
 			$.ajax({
 			// 입력받은 정보를 가지고 서버측에 회원가입 요청
 				type: "POST",
-				url: "/api/user",
+				url: "/auth/joinProc",
 				// #stringify : string 객체를 json으로, json객체를 string으로 자동 변환.
 				// 여기서 data는 전송할 때 사용되는 거임
 				data: JSON.stringify(data),
