@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ResponseDto<T>{
-	private int status;
+	private int status; //HttpStatus타입으로 선언하면, controller단에서 return 할때 .value()안적어줘도 된다.
 	private T data;
 	
 }
