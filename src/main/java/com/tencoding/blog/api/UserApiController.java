@@ -20,7 +20,7 @@ public class UserApiController {
 	@PostMapping("/auth/joinProc")
 	public ResponseDto<Integer> save(User user){ // RequestBody어노테이션 쓴ㄴ다는 것은 json으로넣겠다는 건데. 
 		//application/x-www-form-urlencoded;charset=UTF-8 이거는 키밸류 값으로 던져줌. 여기에 맞춰줘야 해서 매개변수User user앞의 @RequestBody지워주겠음.
-
+		System.out.println(user.toString());
 		int result=userService.saveUser(user);
 		return new ResponseDto<Integer>(HttpStatus.OK.value(),result);
 	}

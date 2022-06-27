@@ -2,25 +2,26 @@
 <%@ include file="../layout/header.jsp"%>
 
 <div class="container">
-	<form>
+<!-- loginProc를 만들지 않음. 왜냐면 스프링 시큐리티가 가로채서 진행해 줄 것임. -->
+	<form action="/auth/loginProc" method = "post">
 	  <div class="form-group">
 	    <label for="username">UserName:</label>
-	    <input type="text" class="form-control" placeholder="Enter UserName" id="username" />
+	    <input type="text" class="form-control" placeholder="Enter UserName" id="username" name = "username"/>
 	  </div>
 	  <div class="form-group">
 	    <label for="pwd">Password:</label>
-	    <input type="password" class="form-control" placeholder="Enter password" id="password" />
+	    <input type="password" class="form-control" name = "password" placeholder="Enter password" id="password" />
 	  </div>
 	  <div class="form-group form-check">
-	    <label class="form-check-label">
+	   	 <label class="form-check-label">
 	    	<input class="form-check-input" type="checkbox" /> Remember me </label>
 	  </div>
 
-	</form>
 	<!-- 자바스크립트 이벤트 바인딩으로 처리할 거라서 form밖으로 뺌 -->
-	<button type="button" id="btn-login" class="btn btn-primary">로그인</button>
+	<button type="submit" id="btn-login" class="btn btn-primary">로그인</button>
+	</form>
 	
 </div>
 <br/>
-<script src="/js/user.js"></script>
+<!-- <script src="/js/user.js"></script> -->
 <%@ include file="../layout/footer.jsp"%>
