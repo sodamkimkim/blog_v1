@@ -3,6 +3,9 @@ let index = {
 		$("#btn-save").bind("click",()=>{
 			this.save();
 		});	
+		$("#btn-delete").bind("click",()=>{
+			this.deleteById();
+		});	
 	},
 	save: function() {
 		// 데이터 가져오기
@@ -29,6 +32,21 @@ let index = {
 			
 		}).fail(function(error){
 			alert("글쓰기에 실패하였습니다.");
+		});
+	},
+	deleteById: function() {
+		let id = $("#board-id").text(); // board-id의 value가 아니라 content를 들고와야 하기 때문에 .val()이 아니라 .text()
+		$.ajax({
+			type:"DELETE",
+			url: "/api/board/"+id//data를 return이라서 api에 요청 
+		}).done(function(data){
+			if(data.status){
+				alert("삭제가 완료되었습니다.");
+				 location.href = "/";
+			}
+		})
+		.fail(function(){
+			alert("삭제에 실패하였습니다.")
 		});
 	}
 }

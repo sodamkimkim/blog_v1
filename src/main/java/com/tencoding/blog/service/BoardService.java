@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.tencoding.blog.model.Board;
 import com.tencoding.blog.model.User;
@@ -17,6 +18,7 @@ public class BoardService {
 	@Autowired
 	private BoardRepository boardRepository;
 		
+	@Transactional
 	public void write(Board board, User user) {
 		// 데이터 넘어올때, 화면단에서 content랑 title만 넘어오는데 , Board는 사실 다른 데이터도 필요하다. userId도 필요함.(작성자가 누구인지)
 		// 서비스단 만드는 이유?
@@ -27,14 +29,21 @@ public class BoardService {
 		// model에서 통으로 데이터 던져주고 있다.
 		boardRepository.save(board);
 	}
+	@Transactional
 	public Page<Board> getBoardList(Pageable pageable) {
 		return boardRepository.findAll(pageable);
 	}
 	
+	@Transactional
 	public Board boardDetail(int boardId) {
 		return boardRepository.findById(boardId).orElseThrow(() -> {
 			return new IllegalArgumentException("해당 글은 찾을 수 없습니다.");
 		});
+	}
+	
+	@Transactional
+	public void deleteById(int id) {
+		boardRepository.deleteById(id);
 	}
 	
 }
