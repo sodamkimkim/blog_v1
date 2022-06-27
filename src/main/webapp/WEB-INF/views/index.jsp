@@ -23,7 +23,7 @@
 	  <li class="page-item ${pageable.last ? isDisabled : isNotDisabled}"><a class="page-link" href="/?page=${pageable.number +1}">Next</a></li>
 	</ul>
 	<br/>
-	
+
 	<%@ include file="layout/footer.jsp" %>
 	
 	

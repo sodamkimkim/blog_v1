@@ -4,7 +4,7 @@
 	<div class = "container">
 		<button class="btn bg-secondary" onclick="history.back();">돌아가기</button>
 		<c:if test="${board.userId.id == principal.user.id}"><!-- el표현식. board.userId.id이렇게 쓰면 자동으로 getter setter찾아감. -->
-			<button class="btn btn-warning" id="btn-update">수정</button>
+			<a href="/board/${board.id}/update_form" class="btn btn-warning" >수정</a> <!-- button -> a로 변경하면 get방식으로 매핑 페이지 이동이기 때문에-->
 			<button class="btn btn-danger" id="btn-delete">삭제</button>
 		</c:if>
 		<br/><br/>
