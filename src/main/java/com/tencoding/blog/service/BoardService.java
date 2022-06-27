@@ -1,11 +1,15 @@
 package com.tencoding.blog.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.tencoding.blog.model.Board;
 import com.tencoding.blog.model.User;
 import com.tencoding.blog.repository.BoardRepository;
+
+
 
 @Service
 public class BoardService {
@@ -23,4 +27,8 @@ public class BoardService {
 		// model에서 통으로 데이터 던져주고 있다.
 		boardRepository.save(board);
 	}
+	public Page<Board> getBoardList(Pageable pageable) {
+		return boardRepository.findAll(pageable);
+	}
+	
 }
