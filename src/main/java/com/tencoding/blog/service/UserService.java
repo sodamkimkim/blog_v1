@@ -34,6 +34,21 @@ public class UserService {
 		}
 		return 1;
 	}
+
+	@Transactional
+	public void updateUser(User user) {
+		User userEntity = userRepository.findById(user.getId()) // ajax할 때 data로 id값보내기 때문에 user에서 id값 가져올 수 있다.
+				.orElseThrow(() -> {
+					return new IllegalArgumentException("회원정보가 없습니다.");
+				});
+		// 해시 암호 처리
+		String rawPassword = user.getPassword();
+		String hashPassword = encoder.encode(rawPassword);
+		userEntity.setPassword(hashPassword);
+		userEntity.setEmail(user.getEmail());
+		// DB정보를 수정했으면 세션 정보도 같이 수정해 줘야 한다.
+		
+	}
 	
 //	@Transactional(readOnly = true)
 //	public User login(User user) {

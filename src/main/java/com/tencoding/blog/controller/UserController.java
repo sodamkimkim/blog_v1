@@ -5,7 +5,6 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 public class UserController {
@@ -28,5 +27,10 @@ public class UserController {
 		// 세션정보를 제거. (로그아웃 처리)
 		httpSession.invalidate();
 		return "redirect:/";
+	}
+	
+	@GetMapping("/user/update_form")
+	public String updateForm() {
+		return "user/update_form";
 	}
 }
