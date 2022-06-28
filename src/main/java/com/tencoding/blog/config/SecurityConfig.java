@@ -3,6 +3,7 @@ package com.tencoding.blog.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -24,6 +25,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter { // 이거 ext
 		return new BCryptPasswordEncoder(); // 해시 암호화 되어야 디비에 저장할 수 있는데 이 함수가 암호화처리해 주는 거다.
 		// 사용자로부터 패스워드 받아서 암호화 해서 디비에 저장하기 전에 처리해주는 BC어쩌고 녀석.
 	}
+	
+	@Bean // 강제 IOC
+	@Override
+		public AuthenticationManager authenticationManagerBean() throws Exception {
+			return super.authenticationManagerBean();
+		}
+	// 필터 뜨는 시점에 manager를 메모리에 올려라.
+	
 	@Autowired
 	private PrincipalDetailService principalDetailService;
 
@@ -56,7 +65,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter { // 이거 ext
 
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		//1. userDetailService 들어갈 오브젝트 만들어줘야 한다.
+		// 1. userDetailService 들어갈 오브젝트 만들어줘야 한다.
 		// 2. passwordEncoder에 우리가 사용하는 해시함수를 알려줘야 한다.
 		auth.userDetailsService(principalDetailService).passwordEncoder(encodePWD());
 		// 디비에 사용자가 있는지 확인하고, 해시알고리즘 처리를 해서 비번맞는지 확인해줌
