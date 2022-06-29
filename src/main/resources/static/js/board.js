@@ -83,7 +83,7 @@ let index = {
 			alert("글 수정에 실패하였습니다.");
 		});
 	},
-	
+
 	// 댓글 등록
 	replySave: function() {
 		// 데이터 가져오기 (boardId: 해당게시글의 아이디)
@@ -91,7 +91,7 @@ let index = {
 			boardId: $("#board-id").text(),
 			content: $("#reply-content").val()
 		}
-	
+
 		// ``백틱(자바스크립트 변수를 문자열안에 넣어서 사용할 수 있다.)
 		$.ajax({
 			type: "POST",
@@ -102,17 +102,32 @@ let index = {
 		})
 			.done(function(response) {
 				if (response.status) {
-					alert("댓글작성이 완료되었습니다.");
-					location.href = `/board/${data.boardId}`;
+					//response - int status, T data
+					console.log(response.data)
+					addReplyElement(response.data);
 				}
 
 			}).fail(function(error) {
 				alert("댓글작성에 실패하였습니다.");
 			});
-	
-			
+
+
 	}
 
 }
+
+function addReplyElement(reply) {
+	let childElement =`<li class="list-group-item d-flex justify-content-between" id="reply--1">
+	      <div>${reply.content}</div>
+	      <div class="d-flex">
+	        <div>작성자 : ${reply.user.username}&nbsp;&nbsp;</div>
+	        <button class="badge badge-danger">삭제</button>
+	      </div>
+	    </li>`;
+	    
+	 $("#reply--box").prepend(childElement);   
+	    
+}
+
 
 index.init();

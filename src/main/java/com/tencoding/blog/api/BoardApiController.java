@@ -37,24 +37,29 @@ public class BoardApiController {
 
 	}
 
+	// 2. 서비스 레이어 만들기
+	
+	
 	@DeleteMapping("/api/board/{id}")
 	public ResponseDto<Integer> deleteById(@PathVariable int id) {
 		boardService.deleteById(id);
 		return new ResponseDto<>(HttpStatus.OK.value(), 1);
 	}
 	
-	@PutMapping("/api/board/{id}")
-	public ResponseDto<Integer> update(@PathVariable int id, @RequestBody Board board){
-		boardService.modifyBoard(id, board);
-		return new ResponseDto<Integer>(HttpStatus.OK.value(),1);
-	}
-	//	url: `/api/board/${data.boardId}/reply`,
 	
-	@PostMapping("/api/board/{boardId}/reply")
-	public ResponseDto<Integer> replySave(@PathVariable int boardId, 
-			@RequestBody Reply reply, @AuthenticationPrincipal PrincipalDetail principalDetail) {
-		// 서비스에 넘겨서 데이터 처리
+	@PutMapping("/api/board/{id}")
+	public ResponseDto<Integer> update(@PathVariable int id, @RequestBody Board board) {
+		boardService.modifyBoard(id, board);
 		return new ResponseDto<Integer>(HttpStatus.OK.value(), 1);
 	}
-
+	
+	// url: `/api/board/${data.boardId}/reply`
+	@PostMapping("api/board/{boardId}/reply")
+	public ResponseDto<Reply> replySave(@PathVariable int boardId, 
+			@RequestBody Reply reply, @AuthenticationPrincipal PrincipalDetail principalDetail) {
+		
+		//  서비스 데이터 처리
+		Reply replyEntity = boardService.writeReply(principalDetail.getUser(), boardId, reply);
+		return new ResponseDto<Reply>(HttpStatus.OK.value(), replyEntity);
+	}
 }

@@ -65,14 +65,23 @@ public class BoardService {
 	}
 	
 	//	boardService.writeReply(principalDetail.getUser(), boardId, reply);
+	// boardService.writeReply(principalDetail.getUser(), boardId, reply);
 	@Transactional
-	public void writeReply(User user, int boardId, Reply requestReply) {
+	public Reply writeReply(User user, int boardId, Reply requestReply) {
 		
 		Board boardEntity = boardRepository.findById(boardId).orElseThrow(() -> {
-			return new IllegalArgumentException("댓글쓰기 실패: 게시글이 존재하지 않아요.");
+			
+			return new IllegalArgumentException("댓글 쓰기 실패 : 게시글이 존재하지 않습니다");
 		});
+		
 		requestReply.setUser(user);
 		requestReply.setBoard(boardEntity);
-		replyRepository.save(requestReply);
+		
+		Reply replyEntity = replyRepository.save(requestReply);
+		
+//		System.out.println("데이터 확인 댓글: " + replyEntity);
+		
+		return replyEntity;
+	
 	}
 }
