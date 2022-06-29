@@ -49,6 +49,16 @@ public class UserService {
 		// DB정보를 수정했으면 세션 정보도 같이 수정해 줘야 한다.
 		
 	}
+	@Transactional(readOnly = true)
+	public User searchUser(String username) {
+		User userEntity = userRepository.findByUsername(username).orElseGet(() -> {
+			return new User();
+			
+		});
+		return userEntity;
+	}
+	
+	
 	
 //	@Transactional(readOnly = true)
 //	public User login(User user) {

@@ -33,6 +33,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter { // 이거 ext
 	@Override
 	public AuthenticationManager authenticationManagerBean() throws Exception {
 		return super.authenticationManagerBean();
+		// 이 AuthenticationManager이거는 Autowired로 안되고 WebSecurityConfigurerAdapter소속이라서 이클래스에서 @Bean으로 먼저 등록해야 쓸 수 있다.
 	}
 	// 필터 뜨는 시점에 manager를 메모리에 올려라.
 

@@ -3,10 +3,15 @@ package com.tencoding.blog.controller;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -20,12 +25,20 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tencoding.blog.dto.KakaoProfile;
+import com.tencoding.blog.dto.KakaoProfile.KakaoAccount;
 import com.tencoding.blog.dto.OAuthToken;
 import com.tencoding.blog.model.User;
 import com.tencoding.blog.service.UserService;
 
 @Controller
 public class UserController {
+	
+	@Value("${tenco.key}")
+	private String tencoKey;
+	
+	@Autowired
+	AuthenticationManager authenticationManager;
+	
 	@Autowired
 	private HttpSession httpSession;
 
@@ -67,7 +80,6 @@ public class UserController {
 	}
 
 	@GetMapping("/auth/kakao/callback")
-	@ResponseBody
 	public String kakaoCallback(@RequestParam String code) {
 		// 자바 코드로 다른 서버와 통신할 때는 HttpConnection객체 사용
 		// 혹은 Retrofit2
@@ -96,72 +108,69 @@ public class UserController {
 				kakaoTokenRequest, String.class);
 
 		// response -> Object 타입으로 변환 (Gson, Json Simple, ObjectMapper)
-        // 파싱 처리 
-        OAuthToken authToken = null;
-        ObjectMapper objectMapper = new ObjectMapper();
-        // String ---> Object (클래스 생성)
-        try {
-            authToken = objectMapper.readValue(response.getBody(), OAuthToken.class);
+		// 파싱 처리
+		OAuthToken authToken = null;
+		ObjectMapper objectMapper = new ObjectMapper();
+		// String ---> Object (클래스 생성)
+		try {
+			authToken = objectMapper.readValue(response.getBody(), OAuthToken.class);
 
-        } catch (JsonMappingException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (JsonProcessingException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+		} catch (JsonMappingException e) {
+			e.printStackTrace();
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
 
-        // 액세스 토큰 사용 
-        RestTemplate rt2 = new RestTemplate(); 
+		// 액세스 토큰 사용
+		RestTemplate rt2 = new RestTemplate();
 
-        HttpHeaders headers2 = new HttpHeaders();
-        // 주의 Bearer 다음에 무조건 한 칸 띄우기 !!! 
-        headers2.add("Authorization", "Bearer " + authToken.getAccessToken());
-        headers2.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
+		HttpHeaders headers2 = new HttpHeaders();
+		// 주의 Bearer 다음에 무조건 한 칸 띄우기 !!!
+		headers2.add("Authorization", "Bearer " + authToken.getAccessToken());
+		headers2.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
 
-        // 바디 
-        HttpEntity<MultiValueMap<String, String>> kakaoProfileRequest = new HttpEntity<>(headers2);
+		// 바디
+		HttpEntity<MultiValueMap<String, String>> kakaoProfileRequest = new HttpEntity<>(headers2);
 
-        ResponseEntity<String> response2 = rt2.exchange("https://kapi.kakao.com/v2/user/me",
-                HttpMethod.POST,
-                kakaoProfileRequest,
-                String.class);
+		ResponseEntity<KakaoProfile> kakaoProfileResponse = rt2.exchange("https://kapi.kakao.com/v2/user/me",
+				HttpMethod.POST, kakaoProfileRequest, KakaoProfile.class);
 
-        System.out.println(response2);
+		// 소셜 로그인 처리할 떄,
+		// 사용자가 로그인 했을 경우, 최초 사용자라면 -> 회원가입처리한다.
+		// 한번이라도 가입이 진행된 사용자면 로그인 처리를 해주면 된다.
+		// 만약 회원가입시 필요한 정보가 더 있어야 한다면, 추가로 사용자한테 정보를 받아서 가입진행처리를 해야한다.
+		KakaoAccount account = kakaoProfileResponse.getBody().getKakaoAccount();
+		System.out.println("카카오 아이디: " + kakaoProfileResponse.getBody().getId());
+		System.out.println("카카오 이메일: " + account.getEmail());
+		System.out.println("블로그에서 사용될 유저네임: " + account.getEmail() + "_" + kakaoProfileResponse.getBody().getId());  //이메일이랑 아이디 합쳐서 유저네임 사용해서 중복 줄임
+		System.out.println("블로그에서 사용될 이메일: " + account.getEmail());
+		
+		User kakaoUser = User.builder()
+				.username(account.getEmail() + "_" + kakaoProfileResponse.getBody().getId())
+				.password(tencoKey)// password임의로 만들어 넣어야 한다. 무조건 있어야 하는 제약
+				.email(account.getEmail())
+				.oauth("kakao")
+				.build();
+		
+		System.out.println(kakaoUser);
+		// 1. UserService호출해서 저장진행
+		// 단, 소셜 로그인 요청자가 이미 가입된 유저라면, 저장(x)
+//		userService.saveUser(kakaoUser);
+		User originUser = userService.searchUser(kakaoUser.getUsername());
+		// 
+		
+		if(originUser.getUsername()==null) {
+			System.out.println("신규 회원이 아니기 때문에 회원가입을 진행");
+			userService.saveUser(kakaoUser);
+		}
+		
+		
+		// 자동 로그인 처리 -> security세션에다가 강제 저장
+		Authentication authentication = authenticationManager
+				.authenticate(new UsernamePasswordAuthenticationToken(kakaoUser.getUsername(), tencoKey));
 
-        
-        //////해보기
-        
-     // response -> Object 타입으로 변환 (Gson, Json Simple, ObjectMapper)
-        // 파싱 처리 
-        KakaoProfile kp = null;
-       objectMapper = new ObjectMapper();
-        // String ---> Object (클래스 생성)
-        try {
-        	kp = objectMapper.readValue(response.getBody(), KakaoProfile.class);
-
-        } catch (JsonMappingException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (JsonProcessingException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        
-        
-        
-        RestTemplate rt3 = new RestTemplate();
-        HttpHeaders header3 = new HttpHeaders();
-        header3.add("Authorization", "Bearer " + kp.get());
-        
-        HttpEntity<MultiValueMap<String, String>> what = new HttpEntity<>(header3);
-        ResponseEntity<String> response3 = rt3.exchange("https://kapi.kakao.com/v1/user/update_profile",
-        		HttpMethod.POST,
-        		what,
-        		String.class);
-        
-//		return "카카오 인가코드 요청 : " + code; // 인가code받아서 화면단에 뿌려봄. 코드 받았으니까 그다음엔 access token 받아야함.
-		return "카카오 프로필정보 요청 : " + response3;
+		SecurityContextHolder.getContext().setAuthentication(authentication);
+		return "redirect:/";
 	}
 
 }
