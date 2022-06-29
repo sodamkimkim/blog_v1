@@ -7,8 +7,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.tencoding.blog.model.Board;
+import com.tencoding.blog.model.Reply;
 import com.tencoding.blog.model.User;
 import com.tencoding.blog.repository.BoardRepository;
+import com.tencoding.blog.repository.ReplyRepository;
 
 @Service
 public class BoardService {
@@ -16,6 +18,9 @@ public class BoardService {
 	@Autowired
 	private BoardRepository boardRepository;
 
+	@Autowired
+	private ReplyRepository replyRepository;
+	
 	@Transactional
 	public void write(Board board, User user) {
 		// 데이터 넘어올때, 화면단에서 content랑 title만 넘어오는데 , Board는 사실 다른 데이터도 필요하다. userId도
@@ -57,5 +62,17 @@ public class BoardService {
 		boardEntity.setTitle(board.getTitle());
 		boardEntity.setContent(board.getContent());
 		// 더티체킹하려면 @Transactional만 걸어주면된다.
+	}
+	
+	//	boardService.writeReply(principalDetail.getUser(), boardId, reply);
+	@Transactional
+	public void writeReply(User user, int boardId, Reply requestReply) {
+		
+		Board boardEntity = boardRepository.findById(boardId).orElseThrow(() -> {
+			return new IllegalArgumentException("댓글쓰기 실패: 게시글이 존재하지 않아요.");
+		});
+		requestReply.setUser(user);
+		requestReply.setBoard(boardEntity);
+		replyRepository.save(requestReply);
 	}
 }

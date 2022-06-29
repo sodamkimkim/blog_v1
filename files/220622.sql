@@ -6,15 +6,17 @@ desc rely;
 select * from board;
 
 insert into reply(content, boardId, userId, createDate)
-values("댓글 1번 글", 1, 2, now());
+values("댓글 1번 글", 1, 1, now());
 insert into reply(content, boardId, userId, createDate)
 values("댓글 1번 글", 2, 2, now());
 insert into reply(content, boardId, userId, createDate)
-values("댓글 1번 글", 3, 1, now());
+values("댓글 1번 글", 3, 3, now());
 insert into reply(content, boardId, userId, createDate)
-values("댓글 1번 글", 4, 1, now());
+values("댓글 1번 글", 4, 4, now());
 insert into reply(content, boardId, userId, createDate)
-values("댓글 1번 글", 5, 2, now());
+values("댓글 1번 글", 5, 5, now());
+insert into reply(content, boardId, userId, createDate)
+values("댓글 1번 글", 3, 3, now());
 --  create table User (
 --        id integer not null auto_increment,
 --         createDate datetime(6),

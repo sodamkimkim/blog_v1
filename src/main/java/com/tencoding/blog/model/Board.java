@@ -18,6 +18,8 @@ import javax.persistence.OneToOne;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -54,6 +56,7 @@ public class Board {
 	// mappedBy는 연관관계의 주인이 아니다.(FK가 아니다.)
 	 //DB에 컬럼을 만들지 마시오
 	@OneToMany(mappedBy = "board", fetch = FetchType.EAGER )
+	@JsonIgnoreProperties({"board", "content"}) // --> Relpy 안에 board getter를 무시해라!(=> 호출 안됨)
 	private List<Reply> replys;
 	
 	@CreationTimestamp

@@ -1,85 +1,118 @@
 let index = {
 	init: function() {
-		$("#btn-save").bind("click",()=>{
+		$("#btn-save").bind("click", () => {
 			this.save();
-		});	
-		$("#btn-delete").bind("click",()=>{
+		});
+		$("#btn-delete").bind("click", () => {
 			this.deleteById();
-		});	
-		
-		$("#btn-update").bind("click",()=>{
+		});
+
+		$("#btn-update").bind("click", () => {
 			this.update();
-		});	
+		});
+
+		$("#btn-reply-save").bind("click", () => {
+			this.replySave();
+		});
 	},
 	save: function() {
 		// 데이터 가져오기
 		let data = {
 			title: $("#title").val(),
 			content: $("#content").val()
-			
+
 		}
-		console.log("데이터 나옴? : " +data);
+		console.log("데이터 나옴? : " + data);
 		$.ajax({
 			type: "POST",
 			url: "/api/board", //매핑해주기 in BoardApiController
 			data: JSON.stringify(data), // 보내는 데이터 타입
 			contentType: "application/json; charset=utf-8",// mimetype으로 데이터 타입 알려줌
 			dataType: "json" // 응답받는 데이터타입
-			
+
 		})
-		.done(function(data, textStatus, xhr) {
-			if(data.status){
-				alert("글쓰기가 완료되었습니다.");
-				 location.href="/";
-			}
-			
-			
-		}).fail(function(error){
-			alert("글쓰기에 실패하였습니다.");
-		});
+			.done(function(data, textStatus, xhr) {
+				if (data.status) {
+					alert("글쓰기가 완료되었습니다.");
+					location.href = "/";
+				}
+
+
+			}).fail(function(error) {
+				alert("글쓰기에 실패하였습니다.");
+			});
 	},
 	deleteById: function() {
 		let id = $("#board-id").text(); // board-id의 value가 아니라 content를 들고와야 하기 때문에 .val()이 아니라 .text()
 		$.ajax({
-			type:"DELETE",
-			url: "/api/board/"+id//data를 return이라서 api에 요청 
-		}).done(function(data){
-			if(data.status){
+			type: "DELETE",
+			url: "/api/board/" + id//data를 return이라서 api에 요청 
+		}).done(function(data) {
+			if (data.status) {
 				alert("삭제가 완료되었습니다.");
-				 location.href = "/";
+				location.href = "/";
 			}
 		})
-		.fail(function(){
-			alert("삭제에 실패하였습니다.")
-		});
+			.fail(function() {
+				alert("삭제에 실패하였습니다.")
+			});
 	},
-	
 
-	update: function(){
+
+	update: function() {
 		let boardId = $("#id").val();
-		
+
 		let data = {
 			title: $("#title").val(),
 			content: $("#content").val()
-		}	
+		}
 		$.ajax({
 			type: "PUT",
 			url: "/api/board/" + boardId,
 			data: JSON.stringify(data),
-			contentType:"application/json; charset=utr-8",
+			contentType: "application/json; charset=utr-8",
 			dataType: "json",
 			async: false
-			
+
 		}).done(function(data) {
-			if(data.status) {
+			if (data.status) {
 				alert("글 수정이 완료 되었습니다.");
 				location.href = "/";
 			}
-		}).fail(function(error){
+		}).fail(function(error) {
 			alert("글 수정에 실패하였습니다.");
 		});
-	}
+	},
 	
+	// 댓글 등록
+	replySave: function() {
+		// 데이터 가져오기 (boardId: 해당게시글의 아이디)
+		let data = {
+			boardId: $("#board-id").text(),
+			content: $("#reply-content").val()
+		}
+	
+		// ``백틱(자바스크립트 변수를 문자열안에 넣어서 사용할 수 있다.)
+		$.ajax({
+			type: "POST",
+			url: `/api/board/${data.boardId}/reply`, //매핑해주기 in BoardApiController
+			data: JSON.stringify(data), // 보내는 데이터 타입
+			contentType: "application/json; charset=utf-8",// mimetype으로 데이터 타입 알려줌
+			dataType: "json" // 응답받는 데이터타입
+		})
+			.done(function(response) {
+				if (response.status) {
+					alert("댓글작성이 완료되었습니다.");
+					location.href = `/board/${data.boardId}`;
+				}
+
+			}).fail(function(error) {
+				alert("댓글작성에 실패하였습니다.");
+			});
+	
+			
+	}
+
 }
 
 index.init();
