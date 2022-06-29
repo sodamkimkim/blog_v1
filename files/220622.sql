@@ -1,6 +1,20 @@
 use blog;
 select * from user;
+desc user;
+select * from reply;
+desc rely;
+select * from board;
 
+insert into reply(content, boardId, userId, createDate)
+values("댓글 1번 글", 1, 2, now());
+insert into reply(content, boardId, userId, createDate)
+values("댓글 1번 글", 2, 2, now());
+insert into reply(content, boardId, userId, createDate)
+values("댓글 1번 글", 3, 1, now());
+insert into reply(content, boardId, userId, createDate)
+values("댓글 1번 글", 4, 1, now());
+insert into reply(content, boardId, userId, createDate)
+values("댓글 1번 글", 5, 2, now());
 --  create table User (
 --        id integer not null auto_increment,
 --         createDate datetime(6),
