@@ -104,30 +104,50 @@ let index = {
 				if (response.status) {
 					//response - int status, T data
 					console.log(response.data)
-					addReplyElement(response.data);
+					addReplyElement(response.data, response.user);		
 				}
 
 			}).fail(function(error) {
 				alert("댓글작성에 실패하였습니다.");
 			});
+	}, // end of replySave
 
+	replyDelete: function(boardId, replyId) {
+		alert("boardId : " + boardId);
+		alert("replyId : " + replyId);
+		// 댓글에 대한 Id값 필요, boardID도 필요
+		$.ajax({
+			type: "DELETE",
+			url: `/api/board/${boardId}/reply/${replyId}`,
+			dataType: "json"
+		}).done(function(response) {
+			console.log(response);
+			alert("댓글 삭제 성공");
+			location.href = `/board/${boardId}`;
+		}).fail(function(error) {
+			console.log(error);
+			alert("댓글 삭제 실패");
+		});
 
 	}
 
 }
 
-function addReplyElement(reply) {
-	let childElement =`<li class="list-group-item d-flex justify-content-between" id="reply--1">
-	      <div>${reply.content}</div>
-	      <div class="d-flex">
-	        <div>작성자 : ${reply.user.username}&nbsp;&nbsp;</div>
-	        <button class="badge badge-danger">삭제</button>
-	      </div>
-	    </li>`;
-	    
-	 $("#reply--box").prepend(childElement);   
-	    
-}
+	function addReplyElement(reply, userId) {
+		let principalId = $("#principal--id").val();
+		let childElement = `<li class = "list-group-item d-flex justify-content-between" id="reply--${reply.id}">
+					<div>${reply.content}</div>
+					<div class = "d-flex justify-content-between">
+						<div>작성자 : ${reply.user.username} &nbsp &nbsp</div> 
+						<c:if test = "${reply.user.id == principalId }">
+							<button class = "badge badge-danger" onClick = "index.replyDelete(${reply.board.id},${reply.id});">삭제</button>
+						</c:if>
+					</div>
+				</li>`;
+	
+		$("#reply--box").prepend(childElement);
+	
+	}
 
 
 index.init();

@@ -2,6 +2,7 @@
 	pageEncoding="UTF-8"%>
 <%@ include file="../layout/header.jsp"%>
 <div class="container">
+	<input type="hidden" value="${principal.user.id}" id = "principal--id">
 	<button class="btn bg-secondary" onclick="history.back();">돌아가기</button>
 	<c:if test="${board.userId.id == principal.user.id}">
 		<!-- el표현식. board.userId.id이렇게 쓰면 자동으로 getter setter찾아감. -->
@@ -39,6 +40,7 @@
 	<br />
 	<div class="card">
 		<div class="card-header">댓글 목록</div>
+		
 	</div>
 	<ul class = "list-group" id="reply--box">
 		<c:forEach var="reply" items="${board.replys}">
@@ -46,7 +48,10 @@
 				<div>${reply.content}</div>
 				<div class = "d-flex justify-content-between">
 					<div>작성자 : ${reply.user.username} &nbsp &nbsp</div> 
-					<button class = "badge badge-danger">삭제</button>
+					<c:if test = "${reply.user.id eq principal.user.id }">
+						<button class = "badge badge-danger" onClick = "index.replyDelete(${board.id},${reply.id}, ${principal.user.id});">삭제</button>
+						<!-- 아작스할 땐 무조건 버튼 onClick쓰자. 이벤트 핸들러 등록 안된다. -->
+					</c:if>
 				</div>
 			</li>
 		</c:forEach>

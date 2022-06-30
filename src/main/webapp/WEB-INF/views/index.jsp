@@ -1,16 +1,16 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="layout/header.jsp" %>
 	
-<div class="container">
-	<c:forEach var="board" items="${pageable.content}"> <!-- 이 board는 리스트. content는 boarderlist 임-->
-		<div class = "card m-2">
-			<div class="card-body">
-				<h4 class = "card-title">${board.title}</h4>
-				<a href = "/board/${board.id}" class="btn btn-primary">상세보기</a>
+	<div class="container">
+		<c:forEach var="board" items="${pageable.content}"> <!-- 이 board는 리스트. content는 boarderlist 임-->
+			<div class = "card m-2">
+				<div class="card-body">
+					<h4 class = "card-title">${board.title}</h4>
+					<a href = "/board/${board.id}" class="btn btn-primary">상세보기</a>
+				</div>
 			</div>
-		</div>
-	</c:forEach>
-</div>
+		</c:forEach>
+	</div>
 	
 	
 	<br/>

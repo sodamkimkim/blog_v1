@@ -38,14 +38,11 @@ public class BoardApiController {
 	}
 
 	// 2. 서비스 레이어 만들기
-	
-	
 	@DeleteMapping("/api/board/{id}")
 	public ResponseDto<Integer> deleteById(@PathVariable int id) {
 		boardService.deleteById(id);
 		return new ResponseDto<>(HttpStatus.OK.value(), 1);
 	}
-	
 	
 	@PutMapping("/api/board/{id}")
 	public ResponseDto<Integer> update(@PathVariable int id, @RequestBody Board board) {
@@ -57,9 +54,17 @@ public class BoardApiController {
 	@PostMapping("api/board/{boardId}/reply")
 	public ResponseDto<Reply> replySave(@PathVariable int boardId, 
 			@RequestBody Reply reply, @AuthenticationPrincipal PrincipalDetail principalDetail) {
-		
 		//  서비스 데이터 처리
 		Reply replyEntity = boardService.writeReply(principalDetail.getUser(), boardId, reply);
+		System.out.println("여기는 BoardApiController - replySave - principal유저 : " + principalDetail.getUser());
 		return new ResponseDto<Reply>(HttpStatus.OK.value(), replyEntity);
+	}
+	///api/board/${boardId}/reply/${replyId}
+	@DeleteMapping("/api/board/{boardId}/reply/{replyId}")
+	public ResponseDto<Integer> deleteReply(@PathVariable int boardId, @PathVariable int replyId) {
+		System.out.println("boardId:" + boardId);
+		System.out.println("replyId:" + replyId);
+		boardService.deleteReplyById(replyId);
+		return new ResponseDto<>(HttpStatus.OK.value(), 1);
 	}
 }

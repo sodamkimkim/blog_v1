@@ -78,10 +78,11 @@ public class BoardService {
 		requestReply.setBoard(boardEntity);
 		
 		Reply replyEntity = replyRepository.save(requestReply);
-		
-//		System.out.println("데이터 확인 댓글: " + replyEntity);
-		
 		return replyEntity;
 	
+	}
+	@Transactional
+	public void deleteReplyById(int replyId) {
+		replyRepository.deleteById(replyId);
 	}
 }
