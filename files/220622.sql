@@ -4,6 +4,8 @@ desc user;
 select * from reply;
 desc rely;
 select * from board;
+select count(*) from board;
+delete from board where id = 1;
 
 insert into reply(content, boardId, userId, createDate)
 values("댓글 1번 글", 1, 1, now());

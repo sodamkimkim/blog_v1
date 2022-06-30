@@ -55,7 +55,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter { // 이거 ext
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.csrf().disable() // HttpSecurity하면 모든 녀석들 다 갖고 옴. 커스텀 하기 위해 재정의 하는 거임 여기서.
-				.authorizeRequests().antMatchers("/auth/**", "/", "/js/**", "/css/**", "/image/**")// auth뒤에 달고 오는 애들은 다
+				.authorizeRequests().antMatchers("/auth/**", "/", "/js/**", "/css/**", "/image/**","/dummy/**")// auth뒤에 달고 오는 애들은 다
 																									// 허용해줄 거다. 이거
 																									// 지정안해주면 static도
 																									// 안됨.

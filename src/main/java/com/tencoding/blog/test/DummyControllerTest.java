@@ -36,7 +36,7 @@ public class DummyControllerTest {
 	// 페이징처리. 쿼리파라미터방식 사용해봄(물음표, 키 밸류 구조로 값써서 서버에 값전달). 키는 page, 값은 0
 	// http://localhost:9090/blog/dummy/user?page=0
 	@GetMapping("/dummy/user")
-	public Page<User> pageList(@PageableDefault(size = 2, sort = "id", direction = Direction.DESC) Pageable pageable) { 
+	public Page<User> pageList(@PageableDefault(size = 1, sort = "id", direction = Direction.DESC) Pageable pageable) { 
 		// 한페이지당 값 두개, 정렬은 id, 최신값부터 들고와라.
 		
 //		Page<User> pageUser = userRepository.findAll(pageable);//pageable들어가는 findAll선택해주기

@@ -28,7 +28,6 @@ public class BoardApiController {
 	// 1. 데이터 주소 맵핑, 데이터 받기
 	@PostMapping("/api/board")
 	public ResponseDto<Integer> save(@RequestBody Board board, @AuthenticationPrincipal PrincipalDetail detail) { // 세션
-																													// 가져오기.
 		// 이 함수가 도착할 때, 전용 security session 안에서 principalDetail을 들고 오는 거임.
 		// 무조건 이 화면 들어온다는 거는 세션이 만들어져 있는 상태라서 로그인 확인 같은건 필요 없다.
 		boardService.write(board, detail.getUser());
