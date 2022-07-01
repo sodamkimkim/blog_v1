@@ -8,18 +8,17 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/user")
 public class UserController {
 	@Autowired
 	private HttpSession httpSession; 
 	
 	//../blog/user/login_form
-	@GetMapping("/login_form")
+	@GetMapping("/auth/login_form")
 	public String loginForm() {
 		return "user/login_form";
 	}
 	
-	@GetMapping("/join_form")
+	@GetMapping("/auth/join_form")
 	public String joinForm() {
 		return "user/join_form";
 	}
