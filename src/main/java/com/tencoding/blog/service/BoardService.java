@@ -1,5 +1,7 @@
 package com.tencoding.blog.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -84,5 +86,11 @@ public class BoardService {
 	@Transactional
 	public void deleteReplyById(int replyId) {
 		replyRepository.deleteById(replyId);
+	}
+	
+	@Transactional
+	public Page<Board> searchBoardByTitle(String title, Pageable pageable) {
+		// validation이나 연산 할 수도
+		return boardRepository.findByTitleContaining(title, pageable);
 	}
 }

@@ -14,6 +14,9 @@ let index = {
 		$("#btn-reply-save").bind("click", () => {
 			this.replySave();
 		});
+		$("#searchBtn").bind("click", () => {
+			this.searchBtnReset();
+		});
 	},
 	save: function() {
 		// 데이터 가져오기
@@ -104,7 +107,7 @@ let index = {
 				if (response.status) {
 					//response - int status, T data
 					console.log(response.data)
-					addReplyElement(response.data, response.user);		
+					addReplyElement(response.data, response.user);
 				}
 
 			}).fail(function(error) {
@@ -129,25 +132,27 @@ let index = {
 			alert("댓글 삭제 실패");
 		});
 
-	}
+	},
+	
+	searchBtnReset
 
 }
 
-	function addReplyElement(reply, userId) {
-		let principalId = $("#principal--id").val();
-		let childElement = `<li class = "list-group-item d-flex justify-content-between" id="reply--${reply.id}">
+function addReplyElement(reply, userId) {
+	let principalId = $("#principal--id").val();
+	let childElement = `<li class = "list-group-item d-flex justify-content-between" id="reply--${reply.id}">
 					<div>${reply.content}</div>
 					<div class = "d-flex justify-content-between">
 						<div>작성자 : ${reply.user.username} &nbsp &nbsp</div> 
-						<c:if test = "${reply.user.id == principalId }">
+						<c:if test = "${reply.user.id == principalId}">
 							<button class = "badge badge-danger" onClick = "index.replyDelete(${reply.board.id},${reply.id});">삭제</button>
 						</c:if>
 					</div>
 				</li>`;
-	
-		$("#reply--box").prepend(childElement);
-	
-	}
+
+	$("#reply--box").prepend(childElement);
+
+}
 
 
 index.init();

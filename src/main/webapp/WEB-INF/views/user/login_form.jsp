@@ -7,12 +7,12 @@
 	<form action="/auth/loginProc" method="post">
 		<div class="form-group">
 			<label for="username">UserName:</label> <input type="text"
-				class="form-control" placeholder="Enter UserName" id="username"
+				class="form-control" value="222" placeholder="Enter UserName" id="username"
 				name="username" />
 		</div>
 		<div class="form-group">
 			<label for="pwd">Password:</label> <input type="password"
-				class="form-control" placeholder="Enter password" id="password"
+				class="form-control" value ="222" placeholder="Enter password" id="password"
 				name="password" />
 		</div>
 		<div class="form-group form-check">
