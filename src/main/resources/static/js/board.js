@@ -14,9 +14,7 @@ let index = {
 		$("#btn-reply-save").bind("click", () => {
 			this.replySave();
 		});
-		$("#searchBtn").bind("click", () => {
-			this.searchBtnReset();
-		});
+
 	},
 	save: function() {
 		// 데이터 가져오기
@@ -132,9 +130,7 @@ let index = {
 			alert("댓글 삭제 실패");
 		});
 
-	},
-	
-	searchBtnReset
+	}
 
 }
 
