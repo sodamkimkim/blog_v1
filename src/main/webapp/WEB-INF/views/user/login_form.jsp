@@ -5,6 +5,7 @@
 <div class="container">
 	<!-- loginProc를 만들지 않음. 왜냐면 스프링 시큐리티가 가로채서 진행해 줄 것임. -->
 	<form action="/auth/loginProc" method="post">
+		<input type = "hidden" name = "${_csrf.parameterName}" value = "${_csrf.token}"><!-- post할땐 무조건 csrf토큰 넣어야함. get방식은 상관없다. -->
 		<div class="form-group">
 			<label for="username">UserName:</label> <input type="text"
 				class="form-control" value="222" placeholder="Enter UserName" id="username"

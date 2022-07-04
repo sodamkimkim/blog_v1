@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.firewall.DefaultHttpFirewall;
 import org.springframework.security.web.firewall.HttpFirewall;
 
@@ -33,7 +34,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter { // 이거 ext
 	@Override
 	public AuthenticationManager authenticationManagerBean() throws Exception {
 		return super.authenticationManagerBean();
-		// 이 AuthenticationManager이거는 Autowired로 안되고 WebSecurityConfigurerAdapter소속이라서 이클래스에서 @Bean으로 먼저 등록해야 쓸 수 있다.
+		// 이 AuthenticationManager이거는 Autowired로 안되고 WebSecurityConfigurerAdapter소속이라서
+		// 이클래스에서 @Bean으로 먼저 등록해야 쓸 수 있다.
 	}
 	// 필터 뜨는 시점에 manager를 메모리에 올려라.
 
@@ -54,12 +56,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter { // 이거 ext
 	// 2. 특정 주소 필터를 설정할 예정
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.csrf().disable() // HttpSecurity하면 모든 녀석들 다 갖고 옴. 커스텀 하기 위해 재정의 하는 거임 여기서.
-				.authorizeRequests().antMatchers("/auth/**", "/", "/js/**", "/css/**", "/image/**","/dummy/**")// auth뒤에 달고 오는 애들은 다
-																									// 허용해줄 거다. 이거
-																									// 지정안해주면 static도
-																									// 안됨.
-				.permitAll().anyRequest().authenticated().and().formLogin().loginPage("/auth/login_form")// 위에서 허용해준 경로
+//		http.csrf().disable() 
+		http.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+		.and()
+				.authorizeRequests()
+				.antMatchers("/auth/**", "/", "/js/**", "/css/**", "/image/**", "/dummy/**", "/test/**")// auth뒤에 달고 오는
+																										// 애들은 다
+				// 허용해줄 거다. 이거
+				// 지정안해주면 static도
+				// 안됨.
+				.permitAll().anyRequest().authenticated()
+		.and()
+				.formLogin().loginPage("/auth/login_form")// 위에서 허용해준 경로
 																											// 말고 다른 경로로
 																											// 오면,(인증된
 																											// 사용자가 아니면)

@@ -1,5 +1,7 @@
 package com.tencoding.blog.controller;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +14,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -32,13 +35,13 @@ import com.tencoding.blog.service.UserService;
 
 @Controller
 public class UserController {
-	
+
 	@Value("${tenco.key}")
 	private String tencoKey;
-	
+
 	@Autowired
 	AuthenticationManager authenticationManager;
-	
+
 	@Autowired
 	private HttpSession httpSession;
 
@@ -56,10 +59,20 @@ public class UserController {
 		return "user/join_form";
 	}
 
+//	@GetMapping("/logout")
+//	public String logout() {
+//		// 세션정보를 제거. (로그아웃 처리)
+//		httpSession.invalidate();
+//		return "redirect:/";
+//	}
+	// security에 맡기지 말고 직접 처리해 보자.
+	// 직접 security 세션 접근해서 redirect 처리.
 	@GetMapping("/logout")
-	public String logout() {
-		// 세션정보를 제거. (로그아웃 처리)
-		httpSession.invalidate();
+	public String logout(HttpServletRequest request, HttpServletResponse response) {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if (authentication != null) {
+			new SecurityContextLogoutHandler().logout(request, response, authentication);
+		}
 		return "redirect:/";
 	}
 
@@ -142,29 +155,31 @@ public class UserController {
 		KakaoAccount account = kakaoProfileResponse.getBody().getKakaoAccount();
 		System.out.println("카카오 아이디: " + kakaoProfileResponse.getBody().getId());
 		System.out.println("카카오 이메일: " + account.getEmail());
-		System.out.println("블로그에서 사용될 유저네임: " + account.getEmail() + "_" + kakaoProfileResponse.getBody().getId());  //이메일이랑 아이디 합쳐서 유저네임 사용해서 중복 줄임
+		System.out.println("블로그에서 사용될 유저네임: " + account.getEmail() + "_" + kakaoProfileResponse.getBody().getId()); // 이메일이랑
+																													// 아이디
+																													// 합쳐서
+																													// 유저네임
+																													// 사용해서
+																													// 중복
+																													// 줄임
 		System.out.println("블로그에서 사용될 이메일: " + account.getEmail());
-		
-		User kakaoUser = User.builder()
-				.username(account.getEmail() + "_" + kakaoProfileResponse.getBody().getId())
+
+		User kakaoUser = User.builder().username(account.getEmail() + "_" + kakaoProfileResponse.getBody().getId())
 				.password(tencoKey)// password임의로 만들어 넣어야 한다. 무조건 있어야 하는 제약
-				.email(account.getEmail())
-				.oauth("kakao")
-				.build();
-		
+				.email(account.getEmail()).oauth("kakao").build();
+
 		System.out.println(kakaoUser);
 		// 1. UserService호출해서 저장진행
 		// 단, 소셜 로그인 요청자가 이미 가입된 유저라면, 저장(x)
 //		userService.saveUser(kakaoUser);
 		User originUser = userService.searchUser(kakaoUser.getUsername());
-		// 
-		
-		if(originUser.getUsername()==null) {
+		//
+
+		if (originUser.getUsername() == null) {
 			System.out.println("신규 회원이 아니기 때문에 회원가입을 진행");
 			userService.saveUser(kakaoUser);
 		}
-		
-		
+
 		// 자동 로그인 처리 -> security세션에다가 강제 저장
 		Authentication authentication = authenticationManager
 				.authenticate(new UsernamePasswordAuthenticationToken(kakaoUser.getUsername(), tencoKey));

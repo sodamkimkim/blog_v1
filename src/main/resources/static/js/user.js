@@ -4,7 +4,7 @@ let index = {
 		$("#btn-save").bind("click", () => {
 			this.save();
 		});
-		
+
 
 		/**
 		전통적인 로그인방식일 때 사용한 부분.
@@ -55,7 +55,7 @@ let index = {
 			alert("회원가입에 실패하였습니다.");
 		});
 	},
-	
+
 	/**
 	login: function() {
 		let data = {
@@ -84,6 +84,17 @@ let index = {
 	}	
 	 */
 	update: function() {
+
+		//csrf활성화 후에는 헤더에 csrf-token값을 넣어야 정상동작된다.
+		//header.jsp에 한번에 넣어둠.
+		// 메타태그 활용
+		// 데이터 가져 오기 (boardId : 해당 게시글에 아이디)
+		let token = $("meta[name='_csrf']").attr("content");//content이런건 다 속성이라서 attr로 찾아오기
+		let header = $("meta[name='_csrf_header']").attr("content");
+
+		console.log("token: " + token);
+		console.log("header: " + header);
+
 		let data = {
 			username: $("#username").val(),
 			id: $("#id").val(),
@@ -91,18 +102,22 @@ let index = {
 			email: $("#email").val()
 		}
 		$.ajax({
+			beforeSend: function(xhr) {
+				console.log("xhr : " + xhr)
+				xhr.setRequestHeader(header, token)
+			},
 			type: "PUT",
 			url: "/user",
 			data: JSON.stringify(data),
 			contentType: "application/json; charset=utf-8",
 			dataType: "json"
-			
-		}).done(function(data){
-			if(data.status){
+
+		}).done(function(data) {
+			if (data.status) {
 				alert("회원정보 수정이 완료되었습니다.")
 				location.href = "/";
 			}
-		}).fail(function(error){
+		}).fail(function(error) {
 			alert("회원정보 수정에 실패하였습니다.")
 		});
 	} // end of update
