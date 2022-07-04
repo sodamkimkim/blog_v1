@@ -7,9 +7,12 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.firewall.DefaultHttpFirewall;
+import org.springframework.security.web.firewall.HttpFirewall;
 
 import com.tencoding.blog.auth.PrincipalDetailService;
 
@@ -25,16 +28,26 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter { // 이거 ext
 		return new BCryptPasswordEncoder(); // 해시 암호화 되어야 디비에 저장할 수 있는데 이 함수가 암호화처리해 주는 거다.
 		// 사용자로부터 패스워드 받아서 암호화 해서 디비에 저장하기 전에 처리해주는 BC어쩌고 녀석.
 	}
-	
+
 	@Bean // 강제 IOC
 	@Override
-		public AuthenticationManager authenticationManagerBean() throws Exception {
-			return super.authenticationManagerBean();
-		}
+	public AuthenticationManager authenticationManagerBean() throws Exception {
+		return super.authenticationManagerBean();
+	}
 	// 필터 뜨는 시점에 manager를 메모리에 올려라.
-	
+
 	@Autowired
 	private PrincipalDetailService principalDetailService;
+
+	@Override
+	public void configure(WebSecurity web) throws Exception {
+		web.httpFirewall(defaultHttpFirewall());
+	}
+	
+	@Bean
+	public HttpFirewall defaultHttpFirewall() {
+		return new DefaultHttpFirewall();
+	}
 
 	// 2. 특정 주소 필터를 설정할 예정
 	@Override
