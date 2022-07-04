@@ -58,8 +58,20 @@ let index = {
 
 	deleteById: function() {
 		let id = $("#board-id").text();
+		//csrf활성화 후에는 헤더에 csrf-token값을 넣어야 정상동작된다.
+		//header.jsp에 한번에 넣어둠.
+		// 메타태그 활용
+		// 데이터 가져 오기 (boardId : 해당 게시글에 아이디)
+		let token = $("meta[name='_csrf']").attr("content");
+		//header에 추가해준 meta태그의 content이런건 다 속성이라서 attr로 찾아오기
+		let header = $("meta[name='_csrf_header']").attr("content");
+		// 데이터 가져 오기 
 
 		$.ajax({
+			beforeSend: function(xhr) {
+				console.log("xhr : " + xhr)
+				xhr.setRequestHeader(header, token)
+			},
 			type: "DELETE",
 			url: "/api/board/" + id
 		})
