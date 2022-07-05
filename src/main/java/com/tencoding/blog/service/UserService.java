@@ -11,7 +11,7 @@ import com.tencoding.blog.model.RoleType;
 import com.tencoding.blog.model.User;
 import com.tencoding.blog.repository.UserRepository;
 
-@Service // IOC 등록
+@Service // IOC 등록 
 public class UserService {
 
 	@Autowired // 자동으로 초기화까지 해줌

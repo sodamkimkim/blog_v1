@@ -4,6 +4,7 @@ desc user;
 select * from reply;
 desc rely;
 select * from board;
+select * from image;
 select count(*) from board;
 delete from board where id = 1;
 
