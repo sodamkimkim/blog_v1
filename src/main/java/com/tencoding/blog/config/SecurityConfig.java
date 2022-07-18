@@ -60,7 +60,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter { // 이거 ext
 		http.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
 		.and()
 				.authorizeRequests()
-				.antMatchers("/auth/**", "/", "/js/**", "/css/**", "/image/**", "/dummy/**", "/test/**")// auth뒤에 달고 오는
+				.antMatchers("/auth/**", "/", "/js/**", "/css/**", "/image/**", "/dummy/**", "/test/**", "/upload/**")// auth뒤에 달고 오는
 																										// 애들은 다
 				// 허용해줄 거다. 이거
 				// 지정안해주면 static도

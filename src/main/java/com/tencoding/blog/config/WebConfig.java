@@ -27,6 +27,7 @@ public class WebConfig implements WebMvcConfigurer{
 		.setCachePeriod(60 * 10 * 6) // 캐시의 지속시간 설정(초) --> 1시간동안 캐시 지속
 		.resourceChain(true) // 리소스 찾는 것을 최적화하기 위해 true로 함
 		.addResolver(new PathResourceResolver()); // 지속시간 설정
+		 
 }
 	
 	@Bean

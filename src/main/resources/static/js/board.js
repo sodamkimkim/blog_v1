@@ -28,20 +28,21 @@ let index = {
 		// 데이터 가져 오기 
 		let data = {
 			title: xSSCheck($("#title").val(), 1),
-			content: $("#content").val()
+			content: $("#content").val() // 자바스크립트 오브젝트로 만듦
 		}
 		console.log("데이터 확인");
 		console.log(data);
+		console.log(header);
 
 		$.ajax({
 			beforeSend: function(xhr) {
 				console.log("xhr : " + xhr)
-				xhr.setRequestHeader(header, token)
+				xhr.setRequestHeader(header, token) // csrf속성을 허용하기 위해서 token셋팅
 			},
 			type: "POST",
 			url: "/api/board",
-			data: JSON.stringify(data),
-			contentType: "application/json; charset=utf-8",
+			data: JSON.stringify(data), // 자바스크립트 오브젝트를 제이슨 형식으로 변환
+			contentType: "application/json; charset=utf-8", // 메타타입!! 제이슨이라고 명시를 해 줘야 서버에서 인식할 수 있다.
 			dataType: "json"
 		})
 			.done(function(data, textStatus, xhr) {

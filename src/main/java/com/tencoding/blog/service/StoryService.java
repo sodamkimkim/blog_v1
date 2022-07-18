@@ -23,10 +23,10 @@ public class StoryService {
 
 	@Value("${file.path}") //yml에 설정한거 들고 올 때 사용하는 어노테이션
 	private String uploadFolder;
-	
+
 	@Autowired
 	StoryRepository storyRepository;
-	
+
 	public Page<Image> getImageList(Pageable pageable){
 		return storyRepository.findAll(pageable);
 	}
@@ -38,11 +38,11 @@ public class StoryService {
 		String imageFileName = uuid + "_"+ "story";
 		String newFileName =  (imageFileName.trim()).replaceAll("\\s", ""); //  \\s는 공백의미
 		System.out.println("파일 명 : " + newFileName);
-		
+
 		//서버 컴퓨터의 Path를 가지고 와야 한다.
 		Path imageFilePath = Paths.get(uploadFolder + newFileName);
 		System.out.println("전체 파일 경로 + 파일명 :" + imageFilePath);
-		
+
 		try {
 			Files.write(imageFilePath, fileDto.getFile().getBytes());
 			//DB저장
@@ -52,6 +52,6 @@ public class StoryService {
 			e.printStackTrace();
 		} //바이너리파일 들고오기.
 	}
-	
-	
+
+
 }

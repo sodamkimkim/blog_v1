@@ -8,13 +8,17 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.tencoding.blog.dto.ReplyCountOfBoardDto;
 import com.tencoding.blog.model.Board;
 import com.tencoding.blog.model.Reply;
 import com.tencoding.blog.repository.BoardRepository;
+import com.tencoding.blog.repository.ReplyCountOfBoardRepository;
 import com.tencoding.blog.repository.ReplyRepository;
 
 @RestController
 public class ReplyControllerTest {
+	@Autowired
+	ReplyCountOfBoardRepository replyCountOfBoardRepository;
 	
 	@Autowired
 	private BoardRepository boardRepository;
@@ -45,5 +49,14 @@ public class ReplyControllerTest {
 	@GetMapping("/test/reply")
 	public List<Reply> getReply() {
 		return replyRepository.findAll();
+	}
+	
+	// ... ./test/group-by-count
+	//security적용되어있기 때문에 인증되지않은 사용자들은 다 튕겨낼거임
+	// /test/허용해주기
+	@GetMapping("/test/group-by-count3")
+	public String test3() {
+		List<ReplyCountOfBoardDto> result = replyCountOfBoardRepository.getReplyCount();
+		return "" + result.toString();
 	}
 }
